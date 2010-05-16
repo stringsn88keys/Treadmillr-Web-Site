@@ -283,33 +283,6 @@ window.googleAfmcRequest = {
 <script type="text/javascript" 
    src="http://pagead2.googlesyndication.com/pagead/show_afmc_ads.js"></script>
 </div>
-<div>
-<?
-echo 'Pace <br><select>';
-for($i=3; $i<20; $i++)
-{
-if($i==10)
-{
-echo "<option value=\"$i\" selected=\"true\">$i</option>";
-}
-else
-{
-echo "<option value=\"$i\">$i</option>";
-}
-
-}
-echo '</select> : <select>';
-for($i=0; $i<60; $i++)
-{
-printf("<option value=\"%d\">%02d</option>", $i, $i);
-}
-echo '</select>'
-
-?>
-<div>
-
-</div>
-</div>
 
 </body>
 </html>
