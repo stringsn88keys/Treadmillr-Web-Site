@@ -13,6 +13,56 @@
 <style type="text/css">
 </style>
 <meta name = "viewport" content = "width = device-width">
+<?
+// fill_option_int over range of [$low,$high)
+function fill_option_int($low, $high, $default, $value_format, $display_format)
+{
+	for($i=$low; $i<$high; $i++)
+	{
+		if($i==$default)
+		{
+			printf("<option value\"".$value_format."\" selected=\"true\">"
+				.$display_format."</option>\n", $i, $i);
+		}
+		else
+		{
+			printf("<option value\"".$value_format."\">".$display_format."</option>\n", $i, $i);
+		}
+	}
+}
+
+// fill_option_decimal over range of [$low,$high) / $factor
+function fill_option_decimal($low, $high, $default, $factor)
+{
+	for($i=$low; $i<$high; $i++)
+	{
+		if($i==$default)
+		{
+			echo "<option value=\"$i\" selected=\"true\">".(int)($i/$factor).".".($i%$factor)."</option>";
+		}
+		else
+		{
+			echo "<option value=\"$i\">".(int)($i/$factor).".".($i%$factor)."</option>";
+		}
+	}
+}
+
+// fill_option_array
+function fill_option_array($choices, $default)
+{
+	foreach($choices as $choice)
+	{
+		if($choice==$default)
+		{
+			echo "<option value=\"$choice\" selected=\"true\">".$choice."</option>";
+		}
+		else
+		{
+			echo "<option value=\"$choice\">".$choice."</option>";
+		}
+	}
+}
+?>
 <script>
     $.jQTouch({
         icon: 'apple-touch-icon.png',
@@ -28,6 +78,8 @@
 function myinit()
 {
 	changepace();
+	changemph();
+	changeinterval();
 }
 
 function setTmill()
@@ -119,21 +171,6 @@ function changemph()
 		<ul>
 			<li class="fields">
 				<?
-// fill_option_int over range of [$low,$high)
-function fill_option_int($low, $high, $default, $value_format, $display_format)
-{
-	for($i=$low; $i<$high; $i++)
-	{
-		if($i==$default)
-		{
-			printf("<option value\"".$value_format."\" selected=\"true\">".$display_format."</option>\n", $i, $i);
-		}
-		else
-		{
-			printf("<option value\"".$value_format."\">".$display_format."</option>\n", $i, $i);
-		}
-	}
-}
 				echo 'Select Mile Pace [MM:SS]<br><select class="numbers" onchange="changepace()" name="minutes">';
 				fill_option_int(3,20,10,"%d","%d");
 
@@ -156,17 +193,7 @@ function fill_option_int($low, $high, $default, $value_format, $display_format)
 			<li class="fields">
 				<?
 				echo 'Select Speed (in MPH)<br><select class="numbers" onchange="changemph()" name="mph">';
-				for($i=10; $i<150; $i++)
-				{
-					if($i==60)
-					{
-						echo "<option value=\"$i\" selected=\"true\">".(int)($i/10).".".($i%10)."</option>";
-					}
-					else
-					{
-						echo "<option value=\"$i\">".(int)($i/10).".".($i%10)."</option>";
-					}
-				}
+				fill_option_decimal(10,150,60,10);
 				echo '</select>';
 				?>
 			</li>
@@ -185,40 +212,16 @@ function fill_option_int($low, $high, $default, $value_format, $display_format)
 			<? 			
 				$distances = array(50, 100, 200, 300, 400, 500, 600, 800, 1000, 1200, 1500, 1600);
 				echo 'Select Interval Distance<br><select class="numbers" onchange="changeinterval()" name="intervaldistance">';
-				foreach ($distances as $distance)
-				{
-					if($distance==800)
-					{
-						echo "<option value=\"$distance\" selected=\"true\">".$distance."m</option>";					
-					}
-					else
-					{
-						echo "<option value=\"$distance\">".$distance."m</option>";					
-					}
-				}
+				fill_option_array($distances, 800);
 				echo '</select>';
 			?>
 			</li>
 			<li class="fields">
 				<?
 				echo 'Select Interval Time<br><select class="numbers" onchange="changeinterval()" name="intervalminutes">';
-				for($i=0; $i<10; $i++)
-				{
-					if($i==5)
-					{
-						echo "<option value=\"$i\" selected=\"true\">$i</option>";
-					}
-					else
-					{
-						echo "<option value=\"$i\">$i</option>";
-					}
-
-				}
+				fill_option_int(0,10,5,"%d","%d");
 				echo '</select> : <select class="numbers" onchange="changeinterval()" name="intervalseconds">';
-				for($i=0; $i<60; $i++)
-				{
-					printf("<option value=\"%d\">%02d</option>", $i, $i);
-				}
+				fill_option_int(0,60,0,"%d","%02d");
 				echo '</select>'
 				?>
 			</li>
@@ -238,17 +241,7 @@ function fill_option_int($low, $high, $default, $value_format, $display_format)
 				$distances = array("5k", "8k", "5 Mile", "10k", "15k", "10 Mile", 
 											"Half-Marathon", "30k", "Marathon", "50k", "50 Mile", "100 Mile");
 				echo 'Select Race Distance<br><select class="numbers" onchange="changerace()" name="racedistance">';
-				foreach ($distances as $distance)
-				{
-					if($distance=="5k")
-					{
-						echo "<option value=\"$distance\" selected=\"true\">".$distance."</option>";
-					}
-					else
-					{
-						echo "<option value=\"$distance\">".$distance."</option>";
-					}
-				}
+				fill_option_array($distances, "10k");
 				echo '</select>';
 				?>
 			</li>
