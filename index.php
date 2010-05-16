@@ -25,6 +25,11 @@
             ]
     });
 
+function myinit()
+{
+	changepace();
+}
+
 function setTmill()
 {
 	element=document.getElementbyID("treadmill");
@@ -73,7 +78,7 @@ function changemph()
 
 </script>
 </head>
-<body>
+<body onload="myinit()">
   <div id="home">
 		<div class="toolbar">
 			<h1>Treadmillr</h1>
@@ -83,6 +88,7 @@ function changemph()
 			<li class="arrow"><a href="#mphtopace">Speed (MPH) to Mile Pace</a></li>
 			<li class="arrow"><a href="#intervaltimetomph">Interval time to MPH</a></li>
 			<li class="arrow"><a href="#racetimetomph">Race Time to MPH</a></li>
+			<li class="arrow"><a href="#walkbreakimpact">Walk Break Impact</a></li>
 			<li class="arrow"><a href="#buildintervalplan">Build Interval Plan</a></li>
 		</ul>
 		<div>
@@ -113,24 +119,26 @@ function changemph()
 		<ul>
 			<li class="fields">
 				<?
+// fill_option_int over range of [$low,$high)
+function fill_option_int($low, $high, $default, $value_format, $display_format)
+{
+	for($i=$low; $i<$high; $i++)
+	{
+		if($i==$default)
+		{
+			printf("<option value\"".$value_format."\" selected=\"true\">".$display_format."</option>\n", $i, $i);
+		}
+		else
+		{
+			printf("<option value\"".$value_format."\">".$display_format."</option>\n", $i, $i);
+		}
+	}
+}
 				echo 'Select Mile Pace [MM:SS]<br><select class="numbers" onchange="changepace()" name="minutes">';
-				for($i=3; $i<20; $i++)
-				{
-					if($i==10)
-					{
-						echo "<option value=\"$i\" selected=\"true\">$i</option>";
-					}
-					else
-					{
-						echo "<option value=\"$i\">$i</option>";
-					}
+				fill_option_int(3,20,10,"%d","%d");
 
-				}
 				echo '</select> : <select class="numbers" onchange="changepace()" name="seconds">';
-				for($i=0; $i<60; $i++)
-				{
-					printf("<option value=\"%d\">%02d</option>", $i, $i);
-				}
+				fill_option_int(0,60,0, "%d", "%02d");
 				echo '</select>'
 				?>
 			</li>
@@ -224,9 +232,36 @@ function changemph()
 			<h1>Race Time to MPH</h1>
 			<a class="button back" href="#">Back</a>
 		</div>
+		<ul>
+			<li class="fields">
+				<?
+				$distances = array("5k", "8k", "5 Mile", "10k", "15k", "10 Mile", 
+											"Half-Marathon", "30k", "Marathon", "50k", "50 Mile", "100 Mile");
+				echo 'Select Race Distance<br><select class="numbers" onchange="changerace()" name="racedistance">';
+				foreach ($distances as $distance)
+				{
+					if($distance=="5k")
+					{
+						echo "<option value=\"$distance\" selected=\"true\">".$distance."</option>";
+					}
+					else
+					{
+						echo "<option value=\"$distance\">".$distance."</option>";
+					}
+				}
+				echo '</select>';
+				?>
+			</li>
+		</ul>
+	</div>
+	<div id="walkbreakimpact">
+		<div class="toolbar">
+			<h1></h1>
+			<a class="button back" href="#">Back</a>
+		</div>
 		<ul class="fields">
 	</div>
-    <div id="buildintervalplan">
+	<div id="buildintervalplan">
 		<div class="toolbar">
 			<h1>Build Interval Plan</h1>
 			<a class="button back" href="#">Back</a>
@@ -235,7 +270,6 @@ function changemph()
 			<li class="arrow">Under</li>
 			<li class="arrow">Construction</li>
 		</ul>
-	
   </div>
   <div>
 <script type="text/javascript"><!--
